@@ -15,7 +15,10 @@
 </div>
 
 @code {
-    private string Username { get; set; }
+    [Inject]
+    private GameService GameService { get; set; }
+
+    private string? Username { get; set; } = "Arnold";
     
     public async Task StartGameAsync()
     {
@@ -24,10 +27,8 @@
             // Show an error message or handle validation
             return;
         }
-        var game = new GameViewModel
-        {
-            Username = Username
-        };
+
+        var game = GameService.NewGame(Username);
         await ProtectedSessionStore.SetAsync("game", game);
         NavigationManager.NavigateTo("/game");
     }

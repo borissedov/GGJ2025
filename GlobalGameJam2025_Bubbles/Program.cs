@@ -1,4 +1,5 @@
 using GlobalGameJam2025_Bubbles.Components;
+using GlobalGameJam2025_Bubbles.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<NewsService>();
 
 var app = builder.Build();
 

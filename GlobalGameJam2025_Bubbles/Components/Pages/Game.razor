@@ -1,26 +1,129 @@
 @page "/game"
-@inject ProtectedSessionStorage ProtectedSessionStore
 
 <div class="bg-body-tertiary p-5 rounded">
-    <h1>Home!</h1>
+    <h1>Game</h1>
 
-    <p>Welcome to your new app, @game?.Username.</p>
-</div>
-
-@code
-{
-    private GameViewModel? game;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    @if (_gameViewModel != null)
     {
-        if (firstRender)
-        {
-            var result = await ProtectedSessionStore.GetAsync<GameViewModel>("game");
-            if (result.Success)
+        <div class="container my-4">
+            <div class="row">
+                <!-- User Information Card -->
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Welcome, @_gameViewModel.Username!</h5>
+                            <p class="card-text">Game Stage: <strong>@_gameViewModel.GameState</strong></p>
+                            <p class="card-text">Days Counter: <strong>@_gameViewModel.DaysCounter</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- News Card -->
+                @if (_gameViewModel.PalantirActive)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title">Palantir Content</h5>
+                                
+                                <img src="@_gameViewModel.PalantirPhotoUrl" alt="Palantir"
+                                     class="rounded-circle img-fluid my-3"
+                                     style="width: 150px; height: 150px;"/>
+                                <p class="card-text">@_gameViewModel.PalantirText</p>
+                                
+                                @* @if (!string.IsNullOrWhiteSpace(_gameViewModel.NewsRecord?.ToDo)) *@
+                                @* { *@
+                                @*     <p class="mt-2"><strong>To Do:</strong> @_gameViewModel.NewsRecord?.ToDo</p> *@
+                                @* } *@
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Emperor Status Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Emperor Status</h5>
+                            <img src="@_gameViewModel.EmperorPhotoUrl" alt="Emperor"
+                                 class="rounded-circle img-fluid mb-3"
+                                 style="width: 100px; height: 100px;"/>
+                            <p>Happiness: <strong>@_gameViewModel.EmperorHapinessText</strong></p>
+                            <p>People's Loyalty: <strong>@_gameViewModel.PeopleLoyalty</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audience Bubbles Section -->
+            @if (_gameViewModel.AudienceBubbles.Any() == true)
             {
-                game = result.Value;
-                StateHasChanged(); 
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title">Audience Bubbles</h5>
+                                <div class="d-flex flex-wrap justify-content-start gap-3">
+                                    @foreach (var bubble in _gameViewModel.AudienceBubbles)
+                                    {
+                                        <div class="text-center"
+                                             style="width:@(bubble.Radius * 2)px; height:@(bubble.Radius * 2)px;">
+                                            <img src="@bubble.AvatarUrl" alt="@bubble.Title"
+                                                 class="rounded-circle img-fluid"
+                                                 style="width: 100%; height: 100%; object-fit: cover;"/>
+                                            <p class="mt-2"><strong>@bubble.Title</strong></p>
+                                            <small class="text-muted">Loyalty: @bubble.Loyalty</small>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-        }
+
+            <!-- Tweet Section -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Tweet</h5>
+                            <textarea class="form-control col-xs-12" maxlength="280"
+                                      placeholder="Type official reply here. Max lenght 280 characters.">"@_gameViewModel.Tweet"</textarea>
+                            <button class="btn btn-primary"
+                                    @onclick="Continue">@_gameViewModel.ActionButtonText</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Comments Section -->
+            @if (_gameViewModel.Comments.Any())
+            {
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title">Comments</h5>
+                                @foreach (var comment in _gameViewModel.Comments)
+                                {
+                                    <div class="d-flex align-items-start mb-3">
+                                        <img src="@comment.AvatarUrl" alt="Avatar" class="rounded-circle me-3"
+                                             style="width: 50px; height: 50px;"/>
+                                        <div>
+                                            <h6>@comment.Username</h6>
+                                            <p>@comment.BodyText</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
-}
+</div>
