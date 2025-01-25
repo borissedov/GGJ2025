@@ -56,7 +56,6 @@ public record AudienceBubble
 public record Comment
 {
     public string Username { get; set; }
-    public string AvatarUrl { get; set; }
     public string BodyText { get; set; }
 }
 

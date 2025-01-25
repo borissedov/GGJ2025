@@ -1,0 +1,11 @@
+User plays as a propaganda officer of the Emperor in a high-magic fantasy realm, tasked with writing news in a way that’ll ensure that the Emperor is loved by his people despite all his transgressions.
+
+The game consists of several phases:
+
+1. The user reads an event concerning the Emperor failure or transgression.
+2. The user writes a tweet-like news about this event, trying to put it in a way that will flatter the Emperor and ensure good reaction from the people.
+3. For each of the factions [Elves, Orcs, Dwarves, Humans] the turn is resolved:
+    a. The Bubblehead Reaction bot assesses how the faction reacts - whether it trust the tweet and how they feel about it. The bot returns change of faction loyalty (numeral value) and a short summary of why it changed that way
+    b. The Bubblehead Commenter bot generates a short twitter-style comment form a random character from the faction
+    c. Turn for the faction is resolved - loyalty of the faction is changed, comment is created, everything is displayed to user
+4. Turn is resolved, the user sees how total loyalty to the Emperor changed

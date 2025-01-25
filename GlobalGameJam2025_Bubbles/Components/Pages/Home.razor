@@ -28,7 +28,7 @@
             return;
         }
 
-        var game = GameService.NewGame(Username);
+        var game = await GameService.NewGame(Username);
         await ProtectedSessionStore.SetAsync("game", game);
         NavigationManager.NavigateTo("/game");
     }

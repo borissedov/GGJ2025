@@ -6,17 +6,19 @@ public class GameService
 {
     private readonly int _maxGameDays;
     private readonly NewsService _newsService;
+    private readonly OpenAiClient _openAiClient;
 
-    public GameService(IConfiguration configuration, NewsService newsService)
+    public GameService(IConfiguration configuration, NewsService newsService, OpenAiClient openAiClient)
     {
         _newsService = newsService;
+        _openAiClient = openAiClient;
         _maxGameDays = configuration.GetValue<int>("MaxGameDays");
     }
 
-    public GameViewModel NewGame(string username)
+    public async Task<GameViewModel> NewGame(string username)
     {
         // Define some default bubble properties with seeds
-        var bubbleTitles = new[] { "Humans", "Orks", "Elves", "Dwarfs" };
+        var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Gnomes" };
         var bubbleColors = new[] { "#FF5733", "#33FF57", "#3357FF", "#F3FF33" }; // Diverse colors
         var bubbles = new List<AudienceBubble>();
 
@@ -32,13 +34,13 @@ public class GameService
                 BodyText =
                     $"{bubbleTitles[i]} are a vital part of the empire. They contribute to its strength and stability.",
                 ColorCode = bubbleColors[i],
-                Loyalty = 100 - (i * 10), // Decreasing loyalty for variety
+                Loyalty = 5, // Decreasing loyalty for variety
                 Radius = 100 + (i * 10) // Increasing radius for variety
             });
         }
 
         // Create the GameViewModel with dynamic data
-        return new GameViewModel()
+        var game = new GameViewModel()
         {
             Username = string.IsNullOrWhiteSpace(username) ? "Guest" : username,
             Comments = new List<Comment>(),
@@ -47,10 +49,11 @@ public class GameService
             PeopleLoyalty = 50,
             EmperorHapinessText = "Content",
             EmperorPhotoUrl = GenerateAvatarUrl("Emperor"),
-            PalantirText = "The Emperor oversees the empire.",
-            PalantirActive = true,
-            PalantirPhotoUrl = GenerateAvatarUrl("Palantir")
         };
+
+        await SetUiElementsState(game);
+
+        return game;
     }
 
     // Helper method to generate avatar URLs based on seed
@@ -88,11 +91,61 @@ public class GameService
 
         if (game.GameState == GameState.CommentsShow)
         {
-            var aiResponse = ProcessTweet(game.NewsRecord!, game.Tweet);
-            game.Comments = aiResponse.Comments;
+            var aiResponse = _openAiClient.ProcessTweet(game.DaysCounter, game.NewsRecord.BodyText, game.Tweet);
+            foreach (var elvesComment in aiResponse.Step2.Elves.Comments)
+            {
+                game.Comments.Add(new Comment()
+                {
+                    Username = "Elves",
+                    BodyText = elvesComment
+                });
+            }
+            foreach (var orcsComment in aiResponse.Step2.Orcs.Comments)
+            {
+                game.Comments.Add(new Comment()
+                {
+                    Username = "Orks",
+                    BodyText = orcsComment
+                });
+            }
+            foreach (var gnomesComment in aiResponse.Step2.Gnomes.Comments)
+            {
+                game.Comments.Add(new Comment()
+                {
+                    Username = "Gnomes",
+                    BodyText = gnomesComment
+                });
+            }
+            foreach (var humansComment in aiResponse.Step2.Humans.Comments)
+            {
+                game.Comments.Add(new Comment()
+                {
+                    Username = "Humans",
+                    BodyText = humansComment
+                });
+            }
+            
             foreach (var bubble in game.AudienceBubbles)
             {
-                // bubble.LoyaltyDelta = aiResponse.LoyaltyDeltas[bubble.Title];
+                switch (bubble.Title)
+                {
+                    case "Humans":
+                        bubble.Loyalty += aiResponse.Step2.Humans.FinalValue;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Humans.FinalValue;
+                        break;
+                    case"Orcs":
+                        bubble.Loyalty += aiResponse.Step2.Orcs.FinalValue;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Orcs.FinalValue;
+                        break;
+                    case"Elves":
+                        bubble.Loyalty += aiResponse.Step2.Elves.FinalValue;    
+                        bubble.LoyaltyDelta = aiResponse.Step2.Elves.FinalValue;
+                        break;
+                    case"Gnomes":
+                        bubble.Loyalty += aiResponse.Step2.Gnomes.FinalValue;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Gnomes.FinalValue;
+                        break;
+                }
             }
         }
         
@@ -181,26 +234,4 @@ public class GameService
                 throw new Exception("Unknown game state");
         }
     }
-    
-    private AiResponse ProcessTweet(NewsRecord gameNewsRecord, string gameTweet)
-    {
-        return new AiResponse()
-        {
-            Comments = new List<Comment>()
-            {
-                new ()
-                {
-                    Username = "AI",
-                    AvatarUrl = GenerateAvatarUrl("AI"),
-                    BodyText = "This is a comment from the AI."
-                }
-            }
-        };
-    }
-
-}
-
-internal record AiResponse
-{
-    public IList<Comment> Comments { get; set; }
 }

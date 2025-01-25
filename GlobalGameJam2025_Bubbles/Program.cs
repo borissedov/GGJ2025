@@ -10,6 +10,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<NewsService>();
+builder.Services.AddSingleton<OpenAiClient>();
 
 var app = builder.Build();
 
