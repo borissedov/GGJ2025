@@ -1,9 +1,34 @@
 ﻿@page "/"
 
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject NavigationManager NavigationManager
+
 <PageTitle>Home</PageTitle>
 
 <div class="bg-body-tertiary p-5 rounded">
     <h1>Home!</h1>
 
     <p>Welcome to your new app.</p>
+
+    <input type="text" placeholder="Username" @bind-value="@Username"/>
+    <button class="btn btn-primary" @onclick="StartGameAsync">Start</button>
 </div>
+
+@code {
+    private string Username { get; set; }
+    
+    public async Task StartGameAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Username))
+        {
+            // Show an error message or handle validation
+            return;
+        }
+        var game = new GameViewModel
+        {
+            Username = Username
+        };
+        await ProtectedSessionStore.SetAsync("game", game);
+        NavigationManager.NavigateTo("/game");
+    }
+}

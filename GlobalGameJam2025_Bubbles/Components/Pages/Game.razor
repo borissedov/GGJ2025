@@ -1,0 +1,26 @@
+@page "/game"
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="bg-body-tertiary p-5 rounded">
+    <h1>Home!</h1>
+
+    <p>Welcome to your new app, @game?.Username.</p>
+</div>
+
+@code
+{
+    private GameViewModel? game;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var result = await ProtectedSessionStore.GetAsync<GameViewModel>("game");
+            if (result.Success)
+            {
+                game = result.Value;
+                StateHasChanged(); 
+            }
+        }
+    }
+}
