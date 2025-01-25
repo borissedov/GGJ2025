@@ -18,7 +18,7 @@ public class GameService
     public async Task<GameViewModel> NewGame(string username)
     {
         // Define some default bubble properties with seeds
-        var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Gnomes" };
+        var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Dvarves" };
         var bubbleColors = new[] { "#FF5733", "#33FF57", "#3357FF", "#F3FF33" }; // Diverse colors
         var bubbles = new List<AudienceBubble>();
 
@@ -104,16 +104,16 @@ public class GameService
             {
                 game.Comments.Add(new Comment()
                 {
-                    Username = "Orks",
+                    Username = "Orсs",
                     BodyText = orcsComment
                 });
             }
-            foreach (var gnomesComment in aiResponse.Step2.Gnomes.Comments)
+            foreach (var dwarvesComment in aiResponse.Step2.Dwarves.Comments)
             {
                 game.Comments.Add(new Comment()
                 {
-                    Username = "Gnomes",
-                    BodyText = gnomesComment
+                    Username = "Dwarves",
+                    BodyText = dwarvesComment
                 });
             }
             foreach (var humansComment in aiResponse.Step2.Humans.Comments)
@@ -141,9 +141,9 @@ public class GameService
                         bubble.Loyalty += aiResponse.Step2.Elves.FinalValue;    
                         bubble.LoyaltyDelta = aiResponse.Step2.Elves.FinalValue;
                         break;
-                    case"Gnomes":
-                        bubble.Loyalty += aiResponse.Step2.Gnomes.FinalValue;
-                        bubble.LoyaltyDelta = aiResponse.Step2.Gnomes.FinalValue;
+                    case"Dwarves":
+                        bubble.Loyalty += aiResponse.Step2.Dwarves.FinalValue;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Dwarves.FinalValue;
                         break;
                 }
             }
