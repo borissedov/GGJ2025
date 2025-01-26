@@ -54,3 +54,7 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+body{
+    cursor: url("img/cursor.PNG") 8 0, auto;
+}
