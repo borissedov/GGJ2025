@@ -13,10 +13,12 @@ public record GameViewModel
     
     public NewsRecord? NewsRecord { get; set; }
     
-    public bool PalantirActive { get; set; }
+    public bool PalantirBubbleShown { get; set; }
     // public string PalantirTitle { get; set; }
     public string PalantirPhotoUrl { get; set; }
     public string PalantirText { get; set; }
+    public bool PalantirImageShown { get; set; }
+
     // public int PalantirDelta { get; set; }
     
     public IList<AudienceBubble> AudienceBubbles { get; set; }
@@ -63,5 +65,7 @@ public record NewsRecord
 {
     public string BodyText { get; set; }
     public string ToDo { get; set; }
+
+    public string ImageUrl { get; set; }
     // public string Source { get; set; }
 }

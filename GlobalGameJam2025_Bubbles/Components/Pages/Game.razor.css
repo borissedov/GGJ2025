@@ -1,0 +1,58 @@
+#game-container {
+  background-image: url('img/backround-main.PNG');
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: contain;
+  width: 1296px;
+  height: 860px;
+}
+
+#palantir-image {
+  position: absolute;
+  top: 235px;
+  height: 400px;
+  width: 400px;
+  z-index: 50;
+}
+
+#palantir-bubble {
+  background-image: url('img/bubble-palantir.PNG');
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: contain;
+  width: 400px;
+  height: 400px;
+  position: absolute;
+  top: 270px;
+  left: 200px;
+  z-index: 100;
+}
+
+#palantir-bubble p{
+  font-size: 16px;
+  /* color: white; */
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  transform: translate(-20%, -10%) rotate(-5deg);
+  
+}
+
+#emperor-image{
+  position: absolute;
+  top: 20px;
+  left: 960px;
+  height: 265px;
+  width: 225px;
+  z-index: 50;
+  transform: rotate(2deg);
+}
+
+#days-counter{
+  position: absolute;
+  top: 740px;
+  left: 115px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 42px;
+  color: red;
+}

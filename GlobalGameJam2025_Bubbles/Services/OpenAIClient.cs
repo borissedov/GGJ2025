@@ -54,5 +54,23 @@ Tweet {day}: {tweetText}
 
             return JsonSerializer.Deserialize<TweetProcessingResponse>(responseText);
         }
+
+        public string Debug(string systemPrompt, string userPrompt)
+        {
+            AzureOpenAIClient azureClient = new(
+                new Uri(_endpoint),
+                new ApiKeyCredential(_apiKey)
+            );
+            ChatClient chatClient = azureClient.GetChatClient(_deploymentName);
+
+            ChatCompletion completion = chatClient.CompleteChat(
+            [
+                new SystemChatMessage(systemPrompt),
+                new UserChatMessage(userPrompt)
+            ]);
+
+            return completion.Content[0].Text;
+
+        }
     }
 }

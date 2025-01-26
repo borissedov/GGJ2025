@@ -1,0 +1,24 @@
+@page "/OpenAIDebug"
+@inject OpenAiClient OpenAiClient;
+
+
+<h1>OpenAIDebug</h1>
+<h5>system</h5>
+<textarea class="form-control" @bind="@systemPrompt"></textarea>
+<h5>user</h5>
+<textarea class="form-control" @bind="@userPrompt"></textarea>
+<button class="btn btn-primary" @onclick="Process">Send</button>
+<h5>Output</h5>
+<textarea class="form-control" disabled="disabled" @bind="@output"></textarea>
+
+@code {
+    string systemPrompt;
+    string userPrompt;
+    string output;
+
+    private void Process()
+    {
+        output = OpenAiClient.Debug(systemPrompt, userPrompt);
+        StateHasChanged();
+    }
+}

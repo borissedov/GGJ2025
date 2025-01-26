@@ -18,7 +18,7 @@ public class GameService
     public async Task<GameViewModel> NewGame(string username)
     {
         // Define some default bubble properties with seeds
-        var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Dvarves" };
+        var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Dwarves" };
         var bubbleColors = new[] { "#FF5733", "#33FF57", "#3357FF", "#F3FF33" }; // Diverse colors
         var bubbles = new List<AudienceBubble>();
 
@@ -60,7 +60,7 @@ public class GameService
     private string GenerateAvatarUrl(string seed)
     {
         // Example using DiceBear Avatars API with the "adventurer" style
-        return $"https://avatars.dicebear.com/api/adventurer/{Uri.EscapeDataString(seed)}.svg";
+        return $"img/circle-{seed.ToLower()}.png";
     }
 
     public async Task NextStep(GameViewModel game)
@@ -72,15 +72,15 @@ public class GameService
 
         var firstDay = game.GameState == GameState.Greetings || game.GameState == GameState.EmperorSelector;
         game.GameState = await ResolveNextStep(game);
-        
-      
+
+
         if (game.GameState == GameState.TweetEntry)
         {
             if (!firstDay)
             {
                 game.DaysCounter++;
-
             }
+
             game.NewsRecord = _newsService.GetNewsRecordForDay(game.DaysCounter);
         }
 
@@ -100,6 +100,7 @@ public class GameService
                     BodyText = elvesComment
                 });
             }
+
             foreach (var orcsComment in aiResponse.Step2.Orcs.Comments)
             {
                 game.Comments.Add(new Comment()
@@ -108,6 +109,7 @@ public class GameService
                     BodyText = orcsComment
                 });
             }
+
             foreach (var dwarvesComment in aiResponse.Step2.Dwarves.Comments)
             {
                 game.Comments.Add(new Comment()
@@ -116,6 +118,7 @@ public class GameService
                     BodyText = dwarvesComment
                 });
             }
+
             foreach (var humansComment in aiResponse.Step2.Humans.Comments)
             {
                 game.Comments.Add(new Comment()
@@ -124,7 +127,7 @@ public class GameService
                     BodyText = humansComment
                 });
             }
-            
+
             foreach (var bubble in game.AudienceBubbles)
             {
                 switch (bubble.Title)
@@ -133,25 +136,25 @@ public class GameService
                         bubble.Loyalty += aiResponse.Step2.Humans.FinalValue;
                         bubble.LoyaltyDelta = aiResponse.Step2.Humans.FinalValue;
                         break;
-                    case"Orcs":
+                    case "Orcs":
                         bubble.Loyalty += aiResponse.Step2.Orcs.FinalValue;
                         bubble.LoyaltyDelta = aiResponse.Step2.Orcs.FinalValue;
                         break;
-                    case"Elves":
-                        bubble.Loyalty += aiResponse.Step2.Elves.FinalValue;    
+                    case "Elves":
+                        bubble.Loyalty += aiResponse.Step2.Elves.FinalValue;
                         bubble.LoyaltyDelta = aiResponse.Step2.Elves.FinalValue;
                         break;
-                    case"Dwarves":
+                    case "Dwarves":
                         bubble.Loyalty += aiResponse.Step2.Dwarves.FinalValue;
                         bubble.LoyaltyDelta = aiResponse.Step2.Dwarves.FinalValue;
                         break;
                 }
             }
         }
-        
+
         await SetUiElementsState(game);
     }
-    
+
     private bool ValidateGameState(GameViewModel game)
     {
         return true;
@@ -194,9 +197,10 @@ public class GameService
             case GameState.Greetings:
                 game.TweetInputBlocked = true;
                 game.CommentsBlockShown = false;
-                game.PalantirActive = true;
-                
-                game.PalantirText = $"Greetings {game.Username}";
+
+                game.PalantirBubbleShown = true;
+                game.PalantirText = $"Greetings {game.Username}!";
+                game.PalantirImageShown = false;
                 game.ActionButtonText = "Start the game!";
                 break;
             // case GameState.EmperorSelector:
@@ -206,10 +210,10 @@ public class GameService
             case GameState.TweetEntry:
                 game.TweetInputBlocked = false;
                 game.CommentsBlockShown = false;
-                game.PalantirActive = true;
-                
+                game.PalantirBubbleShown = true;
                 game.PalantirText = game.NewsRecord.BodyText;
-                    
+                game.PalantirImageShown = true;
+                game.PalantirPhotoUrl = game.NewsRecord.ImageUrl;
                 game.ActionButtonText = "Post";
                 break;
             // case GameState.Waiting:
@@ -221,17 +225,48 @@ public class GameService
             case GameState.CommentsShow:
                 game.TweetInputBlocked = true;
                 game.CommentsBlockShown = true;
-                game.PalantirActive = false;
+                game.PalantirBubbleShown = false;
+
+                game.PalantirText = game.NewsRecord.BodyText;
+                game.PalantirImageShown = true;
+                game.PalantirPhotoUrl = game.NewsRecord.ImageUrl;
+
                 game.ActionButtonText = "Next day";
+
                 break;
             case GameState.GameOver:
                 game.TweetInputBlocked = true;
                 game.CommentsBlockShown = false;
-                game.PalantirActive = true;
+                game.PalantirBubbleShown = true;
+                game.PalantirImageShown = false;
+
                 game.ActionButtonText = "Start Over";
                 break;
             default:
                 throw new Exception("Unknown game state");
         }
+        
+        game.EmperorPhotoUrl = RetrieveEmperorPhoto(game);
     }
+
+    private string RetrieveEmperorPhoto(GameViewModel game)
+    {
+        var happiness = new[]
+        {
+            EmperorHappiness.Ease, EmperorHappiness.Pleased, EmperorHappiness.Concerned, EmperorHappiness.Angry,
+            EmperorHappiness.Despair
+        }.OrderBy(x => new Random().Next(100)).First();
+       
+
+        return $"img/emperor-{happiness.ToString().ToLower()}.png";
+    }
+}
+
+internal enum EmperorHappiness
+{
+    Ease,
+    Pleased,
+    Concerned,
+    Angry,
+    Despair
 }
