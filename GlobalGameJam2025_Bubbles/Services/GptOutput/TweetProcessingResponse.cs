@@ -23,16 +23,16 @@ public class Step1
 public class Step2
 {
     [JsonPropertyName("elves")]
-    public RaceAnalysis Elves { get; set; }
+    public RaceAnalysis? Elves { get; set; }
 
     [JsonPropertyName("вwarves")]
-    public RaceAnalysis Dwarves { get; set; }
+    public RaceAnalysis? Dwarves { get; set; }
 
     [JsonPropertyName("humans")]
-    public RaceAnalysis Humans { get; set; }
+    public RaceAnalysis? Humans { get; set; }
 
     [JsonPropertyName("orcs")]
-    public RaceAnalysis Orcs { get; set; }
+    public RaceAnalysis? Orcs { get; set; }
 }
 
 public class RaceAnalysis

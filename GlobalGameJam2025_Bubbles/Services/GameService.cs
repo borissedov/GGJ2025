@@ -26,6 +26,7 @@ public class GameService
         {
             // Generate an avatar URL using a seed (title here)
             var avatarUrl = GenerateAvatarUrl(bubbleTitles[i]);
+            var loyalty = Random.Shared.Next(10);
 
             bubbles.Add(new AudienceBubble
             {
@@ -34,8 +35,8 @@ public class GameService
                 BodyText =
                     $"{bubbleTitles[i]} are a vital part of the empire. They contribute to its strength and stability.",
                 ColorCode = bubbleColors[i],
-                Loyalty = 5, // Decreasing loyalty for variety
-                Radius = 100 + (i * 10) // Increasing radius for variety
+                Loyalty = loyalty * 10,
+                Radius = (int)(25 * (loyalty / 10f))
             });
         }
 
@@ -92,61 +93,66 @@ public class GameService
         if (game.GameState == GameState.CommentsShow)
         {
             var aiResponse = _openAiClient.ProcessTweet(game.DaysCounter, game.NewsRecord.BodyText, game.Tweet);
-            foreach (var elvesComment in aiResponse.Step2.Elves.Comments)
-            {
-                game.Comments.Add(new Comment()
+            
+            if (aiResponse.Step2.Elves != null && aiResponse.Step2.Elves.Comments.Any())
+                foreach (var elvesComment in aiResponse.Step2.Elves.Comments)
                 {
-                    Username = "Elves",
-                    BodyText = elvesComment
-                });
-            }
+                    game.Comments.Add(new Comment()
+                    {
+                        Username = "Elves",
+                        BodyText = elvesComment
+                    });
+                }
 
-            foreach (var orcsComment in aiResponse.Step2.Orcs.Comments)
-            {
-                game.Comments.Add(new Comment()
+            if (aiResponse.Step2.Orcs != null && aiResponse.Step2.Orcs.Comments.Any())
+                foreach (var orcsComment in aiResponse.Step2.Orcs.Comments)
                 {
-                    Username = "Orсs",
-                    BodyText = orcsComment
-                });
-            }
+                    game.Comments.Add(new Comment()
+                    {
+                        Username = "Orсs",
+                        BodyText = orcsComment
+                    });
+                }
 
-            foreach (var dwarvesComment in aiResponse.Step2.Dwarves.Comments)
-            {
-                game.Comments.Add(new Comment()
+            if (aiResponse.Step2.Dwarves != null && aiResponse.Step2.Dwarves.Comments.Any())
+                foreach (var dwarvesComment in aiResponse.Step2.Dwarves.Comments)
                 {
-                    Username = "Dwarves",
-                    BodyText = dwarvesComment
-                });
-            }
+                    game.Comments.Add(new Comment()
+                    {
+                        Username = "Dwarves",
+                        BodyText = dwarvesComment
+                    });
+                }
 
-            foreach (var humansComment in aiResponse.Step2.Humans.Comments)
-            {
-                game.Comments.Add(new Comment()
+            if (aiResponse.Step2.Humans != null && aiResponse.Step2.Humans.Comments.Any())
+                foreach (var humansComment in aiResponse.Step2.Humans.Comments)
                 {
-                    Username = "Humans",
-                    BodyText = humansComment
-                });
-            }
+                    game.Comments.Add(new Comment()
+                    {
+                        Username = "Humans",
+                        BodyText = humansComment
+                    });
+                }
 
             foreach (var bubble in game.AudienceBubbles)
             {
                 switch (bubble.Title)
                 {
                     case "Humans":
-                        bubble.Loyalty += aiResponse.Step2.Humans.FinalValue;
-                        bubble.LoyaltyDelta = aiResponse.Step2.Humans.FinalValue;
+                        bubble.Loyalty += aiResponse.Step2.Humans?.FinalValue ?? 0;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Humans?.FinalValue ?? 0;
                         break;
                     case "Orcs":
-                        bubble.Loyalty += aiResponse.Step2.Orcs.FinalValue;
-                        bubble.LoyaltyDelta = aiResponse.Step2.Orcs.FinalValue;
+                        bubble.Loyalty += aiResponse.Step2.Orcs?.FinalValue ?? 0;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Orcs?.FinalValue ?? 0;
                         break;
                     case "Elves":
-                        bubble.Loyalty += aiResponse.Step2.Elves.FinalValue;
-                        bubble.LoyaltyDelta = aiResponse.Step2.Elves.FinalValue;
+                        bubble.Loyalty += aiResponse.Step2.Elves?.FinalValue ?? 0;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Elves?.FinalValue ?? 0;
                         break;
                     case "Dwarves":
-                        bubble.Loyalty += aiResponse.Step2.Dwarves.FinalValue;
-                        bubble.LoyaltyDelta = aiResponse.Step2.Dwarves.FinalValue;
+                        bubble.Loyalty += aiResponse.Step2.Dwarves?.FinalValue ?? 0;
+                        bubble.LoyaltyDelta = aiResponse.Step2.Dwarves?.FinalValue ?? 0;
                         break;
                 }
             }
@@ -199,7 +205,7 @@ public class GameService
                 game.CommentsBlockShown = false;
 
                 game.PalantirBubbleShown = true;
-                game.PalantirText = $"Greetings {game.Username}!";
+                game.PalantirText = $"Welcome {game.Username}, Minister of Truth!\n\nYour task is clear: rewrite the narrative, secure loyalty, and ensure the Emperor’s glory. Take up your quill and turn scandals into triumphs.\n The fate of the Empire is in your hands.";
                 game.PalantirImageShown = false;
                 game.ActionButtonText = "Start the game!";
                 break;
@@ -245,7 +251,7 @@ public class GameService
             default:
                 throw new Exception("Unknown game state");
         }
-        
+
         game.EmperorPhotoUrl = RetrieveEmperorPhoto(game);
     }
 
@@ -256,7 +262,7 @@ public class GameService
             EmperorHappiness.Ease, EmperorHappiness.Pleased, EmperorHappiness.Concerned, EmperorHappiness.Angry,
             EmperorHappiness.Despair
         }.OrderBy(x => new Random().Next(100)).First();
-       
+
 
         return $"img/emperor-{happiness.ToString().ToLower()}.png";
     }

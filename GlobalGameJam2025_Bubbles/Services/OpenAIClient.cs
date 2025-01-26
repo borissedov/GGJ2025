@@ -52,6 +52,9 @@ Tweet {day}: {tweetText}
 
             string responseText = completion.Content[0].Text;
 
+            Console.WriteLine("OpenAI Response:");
+            Console.WriteLine(responseText);
+            
             return JsonSerializer.Deserialize<TweetProcessingResponse>(responseText);
         }
 

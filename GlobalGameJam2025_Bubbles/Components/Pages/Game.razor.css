@@ -1,67 +1,158 @@
 #game-container {
-  background-image: url('img/backround-main.PNG');
-  background-repeat: no-repeat;
-  background-position: left top;
-  background-size: contain;
-  width: 1296px;
-  height: 860px;
+    background-image: url('img/backround-main.PNG');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: contain;
+    width: 1296px;
+    height: 860px;
 }
 
 #palantir-image {
-  position: absolute;
-  top: 235px;
-  height: 400px;
-  width: 400px;
-  z-index: 50;
+    position: absolute;
+    top: 235px;
+    height: 400px;
+    width: 400px;
+    z-index: 50;
 }
 
 #palantir-bubble {
-  background-image: url('img/bubble-palantir.PNG');
-  background-repeat: no-repeat;
-  background-position: left top;
-  background-size: contain;
-  width: 400px;
-  height: 400px;
-  position: absolute;
-  top: 270px;
-  left: 200px;
-  z-index: 100;
+    background-image: url('img/bubble-palantir.PNG');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: contain;
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    top: 270px;
+    left: 200px;
+    z-index: 100;
 }
 
-#palantir-bubble p{
-  font-size: 16px;
-  /* color: white; */
-  position: absolute;
-  top: 20%;
-  left: 30%;
-  transform: translate(-20%, -10%) rotate(-5deg);
-  
+#palantir-bubble p {
+    font-size: 16px;
+    /* color: white; */
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    transform: translate(-20%, -10%) rotate(-5deg);
+
 }
 
-#emperor-image{
-  position: absolute;
-  top: 20px;
-  left: 960px;
-  height: 265px;
-  width: 225px;
-  z-index: 50;
-  transform: rotate(2deg);
+#palantir-bubble button{
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    transform: rotate(-5deg);
 }
 
-#days-counter{
-  position: absolute;
-  top: 740px;
-  left: 115px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 42px;
-  color: red;
+#emperor-image {
+    position: absolute;
+    top: 20px;
+    left: 960px;
+    height: 265px;
+    width: 225px;
+    z-index: 50;
+    transform: rotate(2deg);
 }
 
-.audience-bubbles-container{
-  position: absolute;
-  display: flex;
-  left: 300px;
-  max-height: 260px;
-  max-width: 650px;
-  overflow: hidden;
+#days-counter {
+    position: absolute;
+    top: 740px;
+    left: 115px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 42px;
+    color: red;
+}
+
+.audience-bubbles-container {
+    position: absolute;
+    display: flex;
+    left: 300px;
+    max-height: 260px;
+    max-width: 650px;
+    overflow: hidden;
+}
+
+.audience-bubble {
+    margin: 0 auto;
+}
+
+.bubble-loyalty {
+    color: white;
+    position: relative;
+    top: -30px;
+    z-index: 150;
+    font-size: 24px;
+}
+
+.tweet-container {
+    position: absolute;
+    top: 420px;
+    left: 700px;
+    width: 470px;
+    height: 140px;
+    transform: rotate(1deg);
+}
+
+.tweet-container textarea {
+    background: transparent;
+    border: none;
+    width: 100%;
+    height: 200px;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+#btn-post-tweet{
+    background: url("img/button-seal.PNG");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: contain;
+    position: absolute;
+    top: 100px;
+    left: 320px;
+    height: 150px;
+    width: 150px;
+    border: none;
+}
+
+#comment-elves{
+    position: absolute;
+    top: 780px;
+    left: 680px;
+    font-weight: bold;
+    width: 180px;
+    font-size: 12px;
+}
+
+#comment-dwarves{
+    position: absolute;
+    top: 780px;
+    left: 680px;
+    font-weight: bold;
+    width: 180px;
+    font-size: 12px;
+
+}
+
+#comment-orcs{
+    position: absolute;
+    top: 780px;
+    left: 680px;
+    font-weight: bold;
+    width: 180px;
+    font-size: 12px;
+
+}
+
+
+#comment-humans{
+    position: absolute;
+    top: 800px;
+    left: 930px;
+    font-weight: bold;
+    width: 180px;
+    font-size: 12px;
 }

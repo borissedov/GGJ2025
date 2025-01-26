@@ -15,6 +15,8 @@
         {
             <div id="palantir-bubble">
                 <p>@_gameViewModel.PalantirText</p>
+                <button class="btn btn-success"
+                        @onclick="Continue">@_gameViewModel.ActionButtonText</button>
             </div>
         }
 
@@ -22,59 +24,40 @@
 
         <strong id="days-counter">@_gameViewModel.DaysCounter</strong>
 
-        <div class="audience-bubbles-container">
+        <div class="audience-bubbles-container text-center">
             @foreach (var bubble in _gameViewModel.AudienceBubbles)
             {
-                <div class="text-center"
-                     style="width:@(bubble.Radius * 2)px; height:@(bubble.Radius * 2)px;">
+                <div class="text-center audience-bubble"
+                     style="max-width:@(bubble.Radius)%;">
                     <img src="@bubble.AvatarUrl" alt="@bubble.Title"
-
-                         style="width: 100%; height: 100%; object-fit: cover;"/>
-                    <p class="mt-2"><strong>@bubble.Title</strong></p>
-                    <small class="text-muted">Loyalty: @bubble.Loyalty</small>
+                         style="width: 100%; height: 100%; object-fit: contain;"/>
+                    <small class="bubble-loyalty">@bubble.Loyalty%</small>
                 </div>
             }
         </div>
-        
+   
+        <div class="tweet-container">
+        <textarea class="form-control col-xs-12" maxlength="280"
+                  placeholder="Type official reply here. Max lenght 280 characters."
+                  value="@_gameViewModel.Tweet"></textarea>
+            <button id="btn-post-tweet"
+                    @onclick="Continue"></button>
 
-        <!-- Tweet Section -->
-        <div class="row">
-            <div class="col-12 mb-4">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">Tweet</h5>
-                        <textarea class="form-control col-xs-12" maxlength="280"
-                                  placeholder="Type official reply here. Max lenght 280 characters."
-                                  value="@_gameViewModel.Tweet"></textarea>
-                        <button class="btn btn-primary"
-                                @onclick="Continue">@_gameViewModel.ActionButtonText</button>
-                    </div>
-                </div>
-            </div>
         </div>
 
 
         <!-- Comments Section -->
         @if (_gameViewModel.Comments.Any())
         {
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <h5 class="card-title">Comments</h5>
-                            @foreach (var comment in _gameViewModel.Comments)
-                            {
-                                <div class="d-flex align-items-start mb-3">
-                                    <div>
-                                        <h6>@comment.Username</h6>
-                                        <p>@comment.BodyText</p>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
+            var elvenComment = _gameViewModel.Comments.FirstOrDefault(c => c.Username == "Elves");
+            var commentOrcs = _gameViewModel.Comments.FirstOrDefault(c => c.Username == "Orcs");
+            var dwarvesComment = _gameViewModel.Comments.FirstOrDefault(c => c.Username == "Dwarves");
+            var humansComment = _gameViewModel.Comments.FirstOrDefault(c => c.Username == "Humans");
+
+            <span id="comment-elves">@elvenComment?.BodyText test</span>
+            <span id="comment-orcs">@commentOrcs?.BodyText test</span>
+            <span id="comment-dwarves">@dwarvesComment?.BodyText test</span>
+            <span id="comment-humans">@humansComment?.BodyText test</span>
         }
     }
 </div>
