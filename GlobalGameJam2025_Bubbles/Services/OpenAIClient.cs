@@ -40,14 +40,17 @@ Content of race_description_ingame.txt:
             );
             ChatClient chatClient = azureClient.GetChatClient(_deploymentName);
 
+            var userMessage = $@"
+Event {day}: {newsText}
+Tweet {day}: {tweetText}
+";
+            Console.Write("Prompt:");
+            Console.WriteLine(userMessage);
+            
             ChatCompletion completion = chatClient.CompleteChat(
             [
                 new SystemChatMessage(_systemMessage),
-                new UserChatMessage(
-                    $@"
-Event {day}: {newsText}
-Tweet {day}: {tweetText}
-")
+                new UserChatMessage(userMessage)
             ]);
 
             string responseText = completion.Content[0].Text;

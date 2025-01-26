@@ -39,7 +39,7 @@
         <div class="tweet-container">
         <textarea class="form-control col-xs-12" maxlength="280"
                   placeholder="Type official reply here. Max lenght 280 characters."
-                  value="@_gameViewModel.Tweet"></textarea>
+                  @bind="_gameViewModel.Tweet"></textarea>
             <button id="btn-post-tweet"
                     @onclick="Continue"></button>
 
