@@ -26,7 +26,7 @@ public class GameService
         {
             // Generate an avatar URL using a seed (title here)
             var avatarUrl = GenerateAvatarUrl(bubbleTitles[i]);
-            var loyalty = 5;
+            var loyalty = 10;
 
             bubbles.Add(new AudienceBubble
             {
