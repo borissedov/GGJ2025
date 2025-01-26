@@ -6,9 +6,9 @@
 <PageTitle>Home</PageTitle>
 
 <div class="bg-body-tertiary p-5 rounded">
-    <h1>Home!</h1>
+    <h1>Welcome, Future Minister of Truth!!</h1>
 
-    <p>Welcome to your new app.</p>
+    <p>Enter your name to claim your position and begin shaping the Emperor’s legacy. The Empire awaits your service!</p>
 
     <input type="text" placeholder="Username" @bind-value="@Username"/>
     <button class="btn btn-primary" @onclick="StartGameAsync">Start</button>
@@ -18,7 +18,7 @@
     [Inject]
     private GameService GameService { get; set; }
 
-    private string? Username { get; set; } = "Arnold";
+    private string? Username { get; set; } = "Username";
     
     public async Task StartGameAsync()
     {
