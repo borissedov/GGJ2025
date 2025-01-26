@@ -56,3 +56,12 @@
   font-size: 42px;
   color: red;
 }
+
+.audience-bubbles-container{
+  position: absolute;
+  display: flex;
+  left: 300px;
+  max-height: 260px;
+  max-width: 650px;
+  overflow: hidden;
+}
