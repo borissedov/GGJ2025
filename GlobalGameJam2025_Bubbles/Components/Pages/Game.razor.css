@@ -120,8 +120,8 @@
 
 #comment-elves{
     position: absolute;
-    top: 780px;
-    left: 680px;
+    top: 730px;
+    left: 970px;
     font-weight: bold;
     width: 180px;
     font-size: 12px;
@@ -129,8 +129,8 @@
 
 #comment-dwarves{
     position: absolute;
-    top: 780px;
-    left: 680px;
+    top: 720px;
+    left: 700px;
     font-weight: bold;
     width: 180px;
     font-size: 12px;

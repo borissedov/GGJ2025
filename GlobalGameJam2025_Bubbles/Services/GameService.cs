@@ -26,7 +26,7 @@ public class GameService
         {
             // Generate an avatar URL using a seed (title here)
             var avatarUrl = GenerateAvatarUrl(bubbleTitles[i]);
-            var loyalty = Random.Shared.Next(10);
+            var loyalty = 5;
 
             bubbles.Add(new AudienceBubble
             {
@@ -35,8 +35,7 @@ public class GameService
                 BodyText =
                     $"{bubbleTitles[i]} are a vital part of the empire. They contribute to its strength and stability.",
                 ColorCode = bubbleColors[i],
-                Loyalty = loyalty * 10,
-                Radius = (int)(25 * (loyalty / 10f))
+                Loyalty = loyalty
             });
         }
 
@@ -47,9 +46,8 @@ public class GameService
             Comments = new List<Comment>(),
             DaysCounter = 1,
             AudienceBubbles = bubbles,
-            PeopleLoyalty = 50,
+            PeopleLoyalty = 5,
             EmperorHapinessText = "Content",
-            EmperorPhotoUrl = GenerateAvatarUrl("Emperor"),
         };
 
         await SetUiElementsState(game);
@@ -140,18 +138,50 @@ public class GameService
                 {
                     case "Humans":
                         bubble.Loyalty += aiResponse.Step2.Humans?.FinalValue ?? 0;
+                        if(bubble.Loyalty < 0)
+                        {
+                            bubble.Loyalty = 0;
+                        }
+                        if(bubble.Loyalty > 10)
+                        {
+                            bubble.Loyalty = 10;
+                        }
                         bubble.LoyaltyDelta = aiResponse.Step2.Humans?.FinalValue ?? 0;
                         break;
                     case "Orcs":
                         bubble.Loyalty += aiResponse.Step2.Orcs?.FinalValue ?? 0;
+                        if(bubble.Loyalty < 0)
+                        {
+                            bubble.Loyalty = 0;
+                        }
+                        if(bubble.Loyalty > 10)
+                        {
+                            bubble.Loyalty = 10;
+                        }
                         bubble.LoyaltyDelta = aiResponse.Step2.Orcs?.FinalValue ?? 0;
                         break;
                     case "Elves":
                         bubble.Loyalty += aiResponse.Step2.Elves?.FinalValue ?? 0;
+                        if(bubble.Loyalty < 0)
+                        {
+                            bubble.Loyalty = 0;
+                        }
+                        if(bubble.Loyalty > 10)
+                        {
+                            bubble.Loyalty = 10;
+                        }
                         bubble.LoyaltyDelta = aiResponse.Step2.Elves?.FinalValue ?? 0;
                         break;
                     case "Dwarves":
                         bubble.Loyalty += aiResponse.Step2.Dwarves?.FinalValue ?? 0;
+                        if(bubble.Loyalty < 0)
+                        {
+                            bubble.Loyalty = 0;
+                        }
+                        if(bubble.Loyalty > 10)
+                        {
+                            bubble.Loyalty = 10;
+                        }
                         bubble.LoyaltyDelta = aiResponse.Step2.Dwarves?.FinalValue ?? 0;
                         break;
                 }
@@ -182,15 +212,22 @@ public class GameService
             //     return GameState.CommentsShow;
             case GameState.CommentsShow:
             {
-                if (game.DaysCounter == _maxGameDays)
+                if(game.AudienceBubbles.Any(b=>b.Loyalty == 0))
                 {
                     return GameState.GameOver;
+                }
+
+                if (game.DaysCounter == _maxGameDays)
+                {
+                    return GameState.GameOverGood;
                 }
 
                 return GameState.TweetEntry;
             }
             case GameState.GameOver:
-                return GameState.GameOver;
+                return GameState.Greetings;
+            case GameState.GameOverGood:
+                return GameState.Greetings;
             default:
                 return GameState.Greetings;
         }
@@ -208,6 +245,10 @@ public class GameService
                 game.PalantirText = $"Welcome {game.Username}, Minister of Truth!\n\nYour task is clear: rewrite the narrative, secure loyalty, and ensure the Emperor’s glory. Take up your quill and turn scandals into triumphs.\n The fate of the Empire is in your hands.";
                 game.PalantirImageShown = false;
                 game.ActionButtonText = "Start the game!";
+                
+                game.Comments = new List<Comment>();
+                
+                game.Tweet = "";
                 break;
             // case GameState.EmperorSelector:
             //     game.TweetInputBlocked = true;
@@ -221,6 +262,8 @@ public class GameService
                 game.PalantirImageShown = true;
                 game.PalantirPhotoUrl = game.NewsRecord.ImageUrl;
                 game.ActionButtonText = "Post";
+                game.Tweet = "";
+                game.Comments = new List<Comment>();
                 break;
             // case GameState.Waiting:
             //     game.TweetInputBlocked = true;
@@ -245,6 +288,17 @@ public class GameService
                 game.CommentsBlockShown = false;
                 game.PalantirBubbleShown = true;
                 game.PalantirImageShown = false;
+                game.PalantirText =
+                    $"Game Over: The Emperor Has Fallen\n\nThe rebellion has toppled the Emperor, and your role as Minister of Truth is over. If you escape judgment, perhaps another dictator will need your talents. For now, your time is done.";
+                game.ActionButtonText = "Start Over";
+            break;
+            case GameState.GameOverGood:
+                game.TweetInputBlocked = true;
+                game.CommentsBlockShown = false;
+                game.PalantirBubbleShown = true;
+                game.PalantirImageShown = false;
+                game.PalantirText =
+                    $"Congratulations {game.Username}, Minister of Truth! You’ve masterfully spun every story, secured unwavering loyalty, and kept the Emperor firmly on his throne. But stay sharp—new news are always on the horizon!";
 
                 game.ActionButtonText = "Start Over";
                 break;
@@ -257,14 +311,16 @@ public class GameService
 
     private string RetrieveEmperorPhoto(GameViewModel game)
     {
-        var happiness = new[]
+        var minLoyalty = game.AudienceBubbles.Min(b => b.Loyalty);
+        var index = Math.Min(5 - minLoyalty / 2, 4);
+        var happinesses = new[]
         {
             EmperorHappiness.Ease, EmperorHappiness.Pleased, EmperorHappiness.Concerned, EmperorHappiness.Angry,
             EmperorHappiness.Despair
-        }.OrderBy(x => new Random().Next(100)).First();
+        };
 
 
-        return $"img/emperor-{happiness.ToString().ToLower()}.png";
+        return $"img/emperor-{happinesses[index].ToString().ToLower()}.png";
     }
 }
 

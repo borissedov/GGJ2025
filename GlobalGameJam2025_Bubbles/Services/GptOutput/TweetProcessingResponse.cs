@@ -25,7 +25,7 @@ public class Step2
     [JsonPropertyName("elves")]
     public RaceAnalysis? Elves { get; set; }
 
-    [JsonPropertyName("вwarves")]
+    [JsonPropertyName("dwarves")]
     public RaceAnalysis? Dwarves { get; set; }
 
     [JsonPropertyName("humans")]

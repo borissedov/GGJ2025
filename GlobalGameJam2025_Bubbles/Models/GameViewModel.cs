@@ -41,7 +41,8 @@ public enum GameState
     TweetEntry,
     //Waiting,
     CommentsShow,
-    GameOver
+    GameOver,
+    GameOverGood
 }
 
 public record AudienceBubble
@@ -52,7 +53,7 @@ public record AudienceBubble
     public string ColorCode { get; set; }
     public int Loyalty { get; set; }  
     public int LoyaltyDelta { get; set; }
-    public int Radius { get; set; }
+    public int Radius => (int)(25 * (Loyalty / 10f));
 }
 
 public record Comment
