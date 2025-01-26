@@ -10,8 +10,10 @@ public partial class Game
     [Inject] private ProtectedSessionStorage _protectedSessionStore { get; set; }
     [Inject] private GameService _gameService { get; set; }
 
+    private bool IsLoading = false;
+
     private GameViewModel? _gameViewModel;
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -27,7 +29,23 @@ public partial class Game
 
     private async Task Continue()
     {
-       await _gameService.NextStep(_gameViewModel);
-       StateHasChanged();
+        try
+        {
+            // Turn on the "loading" indicator
+            IsLoading = true;
+            // Let Blazor re-render so the overlay becomes visible right away
+            StateHasChanged();
+
+            await Task.Delay(1000);
+
+            await _gameService.NextStep(_gameViewModel);
+        }
+        finally
+        {
+            // Turn off the loading indicator
+            IsLoading = false;
+            // Re-render so the overlay goes away
+            StateHasChanged();
+        }
     }
 }

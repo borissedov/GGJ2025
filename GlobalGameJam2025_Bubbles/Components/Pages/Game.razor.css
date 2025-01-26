@@ -1,3 +1,18 @@
+.loading-overlay {
+    position: absolute;  /* or fixed for full screen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;       /* center content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    z-index: 9999;
+}
+
 #game-container {
     background-image: url('img/backround-main.PNG');
     background-repeat: no-repeat;
