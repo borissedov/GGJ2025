@@ -107,7 +107,7 @@ public class GameService
                 {
                     game.Comments.Add(new Comment()
                     {
-                        Username = "Orсs",
+                        Username = "Orcs",
                         BodyText = orcsComment
                     });
                 }
@@ -134,57 +134,37 @@ public class GameService
 
             foreach (var bubble in game.AudienceBubbles)
             {
+                int loyalty;
+                
                 switch (bubble.Title)
                 {
                     case "Humans":
-                        bubble.Loyalty += aiResponse.Step2.Humans?.FinalValue ?? 0;
-                        if(bubble.Loyalty < 0)
-                        {
-                            bubble.Loyalty = 0;
-                        }
-                        if(bubble.Loyalty > 10)
-                        {
-                            bubble.Loyalty = 10;
-                        }
-                        bubble.LoyaltyDelta = aiResponse.Step2.Humans?.FinalValue ?? 0;
+                        loyalty = (aiResponse.Step2.Humans?.FinalValue ?? 0) / 2;
                         break;
                     case "Orcs":
-                        bubble.Loyalty += aiResponse.Step2.Orcs?.FinalValue ?? 0;
-                        if(bubble.Loyalty < 0)
-                        {
-                            bubble.Loyalty = 0;
-                        }
-                        if(bubble.Loyalty > 10)
-                        {
-                            bubble.Loyalty = 10;
-                        }
-                        bubble.LoyaltyDelta = aiResponse.Step2.Orcs?.FinalValue ?? 0;
+                        loyalty = (aiResponse.Step2.Orcs?.FinalValue ?? 0) / 2;
                         break;
                     case "Elves":
-                        bubble.Loyalty += aiResponse.Step2.Elves?.FinalValue ?? 0;
-                        if(bubble.Loyalty < 0)
-                        {
-                            bubble.Loyalty = 0;
-                        }
-                        if(bubble.Loyalty > 10)
-                        {
-                            bubble.Loyalty = 10;
-                        }
-                        bubble.LoyaltyDelta = aiResponse.Step2.Elves?.FinalValue ?? 0;
+                        loyalty = (aiResponse.Step2.Elves?.FinalValue ?? 0) / 2;
                         break;
                     case "Dwarves":
-                        bubble.Loyalty += aiResponse.Step2.Dwarves?.FinalValue ?? 0;
-                        if(bubble.Loyalty < 0)
-                        {
-                            bubble.Loyalty = 0;
-                        }
-                        if(bubble.Loyalty > 10)
-                        {
-                            bubble.Loyalty = 10;
-                        }
-                        bubble.LoyaltyDelta = aiResponse.Step2.Dwarves?.FinalValue ?? 0;
+                        loyalty = (aiResponse.Step2.Dwarves?.FinalValue ?? 0) / 2;
+                        break;
+                    default:
+                        loyalty = 0;
                         break;
                 }
+                
+                bubble.Loyalty += loyalty;
+                if(bubble.Loyalty < 0)
+                {
+                    bubble.Loyalty = 0;
+                }
+                if(bubble.Loyalty > 10)
+                {
+                    bubble.Loyalty = 10;
+                }
+                bubble.LoyaltyDelta = loyalty;
             }
         }
 
@@ -274,7 +254,7 @@ public class GameService
             case GameState.CommentsShow:
                 game.TweetInputBlocked = true;
                 game.CommentsBlockShown = true;
-                game.PalantirBubbleShown = false;
+                game.PalantirBubbleShown = true;
 
                 game.PalantirText = game.NewsRecord.BodyText;
                 game.PalantirImageShown = true;
@@ -290,6 +270,8 @@ public class GameService
                 game.PalantirImageShown = false;
                 game.PalantirText =
                     $"Game Over: The Emperor Has Fallen\n\nThe rebellion has toppled the Emperor, and your role as Minister of Truth is over. If you escape judgment, perhaps another dictator will need your talents. For now, your time is done.";
+                
+                game.Tweet = "";
                 game.ActionButtonText = "Start Over";
             break;
             case GameState.GameOverGood:
@@ -299,6 +281,7 @@ public class GameService
                 game.PalantirImageShown = false;
                 game.PalantirText =
                     $"Congratulations {game.Username}, Minister of Truth! You’ve masterfully spun every story, secured unwavering loyalty, and kept the Emperor firmly on his throne. But stay sharp—new news are always on the horizon!";
+                game.Tweet = "";
 
                 game.ActionButtonText = "Start Over";
                 break;

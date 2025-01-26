@@ -70,7 +70,7 @@
     left: 300px;
     max-height: 260px;
     max-width: 650px;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .audience-bubble {
