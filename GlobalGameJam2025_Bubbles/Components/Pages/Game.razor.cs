@@ -1,6 +1,7 @@
 using GlobalGameJam2025_Bubbles.Models;
 using GlobalGameJam2025_Bubbles.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace GlobalGameJam2025_Bubbles.Components.Pages;
@@ -13,6 +14,8 @@ public partial class Game
     private bool IsLoading = false;
 
     private GameViewModel? _gameViewModel;
+    
+    private ElementReference _tweetInput;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -44,6 +47,10 @@ public partial class Game
         {
             // Turn off the loading indicator
             IsLoading = false;
+            if (_gameViewModel.GameState == GameState.TweetEntry)
+            {
+                await _tweetInput.FocusAsync();
+            }
             // Re-render so the overlay goes away
             StateHasChanged();
         }
