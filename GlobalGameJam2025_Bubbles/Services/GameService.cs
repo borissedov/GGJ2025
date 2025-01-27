@@ -51,6 +51,7 @@ public class GameService
             AudienceBubbles = bubbles,
             PeopleLoyalty = 5,
             EmperorHapinessText = "Content",
+            NewsPermutation = _newsService.GenerateRandomPermutation(_maxGameDays)
         };
 
         _telemetryClient.TrackEvent("NewGame", 
@@ -94,7 +95,7 @@ public class GameService
                 game.DaysCounter++;
             }
 
-            game.NewsRecord = _newsService.GetNewsRecordForDay(game.DaysCounter);
+            game.NewsRecord = _newsService.GetNewsRecordForDay(game.DaysCounter, game.NewsPermutation);
         }
 
         // if (game.GameState == GameState.Waiting)

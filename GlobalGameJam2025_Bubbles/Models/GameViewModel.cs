@@ -32,6 +32,7 @@ public record GameViewModel
     public int PeopleLoyalty { get; set; }
     public bool TweetInputBlocked { get; set; }
     public bool CommentsBlockShown { get; set; }
+    public int[] NewsPermutation { get; set; }
 }
 
 public enum GameState
