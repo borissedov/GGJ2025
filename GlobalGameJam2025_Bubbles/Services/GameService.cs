@@ -241,7 +241,7 @@ public class GameService
                 game.PalantirText = game.NewsRecord.BodyText;
                 game.PalantirImageShown = true;
                 game.PalantirPhotoUrl = game.NewsRecord.ImageUrl;
-                game.ActionButtonText = "Post";
+                game.ActionButtonText = "Write the official interpretation to increase pops loyalty, then press 'seal and send'";
                 game.Tweet = "";
                 game.Comments = new List<Comment>();
                 break;
