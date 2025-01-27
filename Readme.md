@@ -29,5 +29,5 @@ This project is licensed under the MIT License.
 
 ## Creators
 - Vadim Kampel (Illustrations): https://www.instagram.com/yukuka/
-- Yuri (Prompt Engineering)
+- Yuri Volkov (Prompt Engineering)
 - Boris Sedov (Coding)
