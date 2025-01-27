@@ -2,9 +2,12 @@ using BlazorApplicationInsights;
 using GlobalGameJam2025_Bubbles.Components;
 using GlobalGameJam2025_Bubbles.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.ApplicationInsights.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApplicationInsightsTelemetry(config =>
+    config.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
 builder.Services.AddBlazorApplicationInsights(config => config.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
 
 builder.Services.AddRazorComponents()

@@ -1,7 +1,9 @@
 using System.ClientModel;
+using System.Diagnostics;
 using System.Text.Json;
 using Azure.AI.OpenAI;
 using GlobalGameJam2025_Bubbles.Services.GptOutput;
+using Microsoft.ApplicationInsights;
 using OpenAI.Chat;
 
 namespace GlobalGameJam2025_Bubbles.Services
@@ -12,9 +14,11 @@ namespace GlobalGameJam2025_Bubbles.Services
         private readonly string _deploymentName;
         private readonly string _apiKey;
         private readonly string _systemMessage;
+        private readonly TelemetryClient _telemetryClient;
 
-        public OpenAiClient(IConfiguration configuration)
+        public OpenAiClient(IConfiguration configuration, TelemetryClient telemetryClient)
         {
+            _telemetryClient = telemetryClient;
             _endpoint = configuration.GetValue<string>("OpenAIEndpoint")!;
             _deploymentName = configuration.GetValue<string>("OpenAIDeploymentName")!;
             _apiKey = Environment.GetEnvironmentVariable("OpenAIApiKey")!;
@@ -40,6 +44,8 @@ Content of race_description_ingame.txt:
             );
             ChatClient chatClient = azureClient.GetChatClient(_deploymentName);
 
+            var requestId = Guid.NewGuid();
+            
             var userMessage = $@"
 Event {day}: {newsText}
 Tweet {day}: {tweetText}
@@ -47,16 +53,34 @@ Tweet {day}: {tweetText}
             Console.Write("Prompt:");
             Console.WriteLine(userMessage);
             
+            
+            var stopwatch = Stopwatch.StartNew();
+
             ChatCompletion completion = chatClient.CompleteChat(
             [
                 new SystemChatMessage(_systemMessage),
                 new UserChatMessage(userMessage)
             ]);
 
+            stopwatch.Stop();
+            
             string responseText = completion.Content[0].Text;
 
             Console.WriteLine("OpenAI Response:");
             Console.WriteLine(responseText);
+            
+            _telemetryClient.TrackEvent("OpenAICall", 
+                new Dictionary<string, string>
+                {
+                    {"CallId", requestId.ToString()},
+                    {"Prompt", userMessage},
+                    {"Response", responseText}
+                },
+                new Dictionary<string, double>
+                {
+                    {"DurationMs", stopwatch.ElapsedMilliseconds}
+                }
+            );
             
             return JsonSerializer.Deserialize<TweetProcessingResponse>(responseText);
         }
