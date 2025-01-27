@@ -1,4 +1,5 @@
 using GlobalGameJam2025_Bubbles.Models;
+using Microsoft.ApplicationInsights;
 
 namespace GlobalGameJam2025_Bubbles.Services;
 
@@ -7,15 +8,17 @@ public class GameService
     private readonly int _maxGameDays;
     private readonly NewsService _newsService;
     private readonly OpenAiClient _openAiClient;
+    private readonly TelemetryClient _telemetryClient;
 
-    public GameService(IConfiguration configuration, NewsService newsService, OpenAiClient openAiClient)
+    public GameService(IConfiguration configuration, NewsService newsService, OpenAiClient openAiClient, TelemetryClient telemetryClient)
     {
         _newsService = newsService;
         _openAiClient = openAiClient;
+        _telemetryClient = telemetryClient;
         _maxGameDays = configuration.GetValue<int>("MaxGameDays");
     }
 
-    public async Task<GameViewModel> NewGame(string username)
+    public async Task<GameViewModel> NewGame(string username, GameViewModel? game = null)
     {
         // Define some default bubble properties with seeds
         var bubbleTitles = new[] { "Humans", "Orcs", "Elves", "Dwarves" };
@@ -40,7 +43,7 @@ public class GameService
         }
 
         // Create the GameViewModel with dynamic data
-        var game = new GameViewModel()
+        game ??= new GameViewModel()
         {
             Username = string.IsNullOrWhiteSpace(username) ? "Guest" : username,
             Comments = new List<Comment>(),
@@ -50,8 +53,15 @@ public class GameService
             EmperorHapinessText = "Content",
         };
 
+        _telemetryClient.TrackEvent("NewGame", 
+            new Dictionary<string, string>
+            {
+                { "Username", game.Username },
+            }
+        );
+        
         await SetUiElementsState(game);
-
+        
         return game;
     }
 
@@ -71,7 +81,11 @@ public class GameService
 
         var firstDay = game.GameState == GameState.Greetings || game.GameState == GameState.EmperorSelector;
         game.GameState = await ResolveNextStep(game);
-
+        if (game.GameState == GameState.Greetings)
+        {
+            await NewGame(game.Username);
+            return;
+        }
 
         if (game.GameState == GameState.TweetEntry)
         {
@@ -168,6 +182,25 @@ public class GameService
             }
         }
 
+        if (game.GameState == GameState.GameOver)
+        {
+            _telemetryClient.TrackEvent("GameOver", 
+                new Dictionary<string, string>
+                {
+                    { "Username", game.Username },
+                }
+            );
+        }
+        if (game.GameState == GameState.GameOverGood)
+        {
+            _telemetryClient.TrackEvent("GameOverGood", 
+                new Dictionary<string, string>
+                {
+                    { "Username", game.Username },
+                }
+            );
+        }
+        
         await SetUiElementsState(game);
     }
 
