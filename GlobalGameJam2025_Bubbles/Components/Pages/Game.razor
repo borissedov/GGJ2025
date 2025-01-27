@@ -39,7 +39,16 @@
                      style="max-width:@(bubble.Radius)%;">
                     <img src="@bubble.AvatarUrl" alt="@bubble.Title"
                          style="width: 100%; height: 100%; object-fit: contain;"/>
-                    <small class="bubble-loyalty">@(bubble.Loyalty * 10)% (@(bubble.LoyaltyDelta * 10)%)</small>
+                    <small class="bubble-loyalty">@(bubble.Loyalty * 10)%
+                        @if (bubble.LoyaltyDelta > 0)
+                        {
+                            <span class="text-success">(+@(bubble.LoyaltyDelta * 10)%)</span>
+                        }
+                        else if (bubble.LoyaltyDelta < 0)
+                        {
+                            <span class="text-danger">(@(bubble.LoyaltyDelta * 10)%)</span>
+                        }
+                    </small>
                 </div>
             }
         </div>
