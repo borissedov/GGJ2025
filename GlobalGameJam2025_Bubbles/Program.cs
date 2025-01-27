@@ -1,16 +1,19 @@
+using BlazorApplicationInsights;
 using GlobalGameJam2025_Bubbles.Components;
 using GlobalGameJam2025_Bubbles.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddBlazorApplicationInsights(config => config.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<NewsService>();
 builder.Services.AddSingleton<OpenAiClient>();
+
 
 var app = builder.Build();
 
