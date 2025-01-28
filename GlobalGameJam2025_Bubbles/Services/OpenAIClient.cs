@@ -22,15 +22,16 @@ namespace GlobalGameJam2025_Bubbles.Services
             _endpoint = configuration.GetValue<string>("OpenAIEndpoint")!;
             _deploymentName = configuration.GetValue<string>("OpenAIDeploymentName")!;
             _apiKey = Environment.GetEnvironmentVariable("OpenAIApiKey")!;
-            _systemMessage = $@"
-{File.ReadAllText(Path.Combine("wwwroot", "Prompts", "system_prompt.txt"))}
-
-Game Description: 
-{File.ReadAllText(Path.Combine("wwwroot", "Prompts", "game_description.txt"))}
-
-Races Description: 
-{File.ReadAllText(Path.Combine("wwwroot", "Prompts", "race_description_full.txt"))}
-";
+//             _systemMessage = $@"
+// {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "system_prompt.txt"))}
+//
+// Game Description: 
+// {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "game_description.txt"))}
+//
+// Races Description: 
+// {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "race_description_full.txt"))}
+// ";
+            _systemMessage = File.ReadAllText(Path.Combine("wwwroot", "Prompts", "full_system_prompt.txt"));
         }
 
         public TweetProcessingResponse? ProcessTweet(int day, string newsText, string tweetText)
