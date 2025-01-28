@@ -25,14 +25,11 @@ namespace GlobalGameJam2025_Bubbles.Services
             _systemMessage = $@"
 {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "system_prompt.txt"))}
 
-Content of game_description.txt: 
+Game Description: 
 {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "game_description.txt"))}
 
-Content of race_description_full.txt: 
+Races Description: 
 {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "race_description_full.txt"))}
-
-Content of race_description_ingame.txt: 
-{File.ReadAllText(Path.Combine("wwwroot", "Prompts", "race_description_ingame.txt"))}
 ";
         }
 

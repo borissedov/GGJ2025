@@ -43,16 +43,12 @@ Example:
 
 Step 2: Race-by-Race Analysis
 
-For each race (Elves, Dwarves, Humans, Orcs), follow the steps below:
-	1.	Step 2a: Give an initial loyalty reaction (on a scale from -5 to +5), with a short rationale.
-	2.	Step 2b: Adjust this loyalty score based on how the user’s Tweet attempted to spin the Event. Explain why it changed and what the user was aiming for.
-	3.	Step 2c: Consult the race profile (not shown here but assumed to be known in-game). If the new adjusted score contradicts the known profile, re-adjust accordingly. State whether changes were made.
-	4.	Step 2d: Present the final numeric loyalty value.
-	5.	Step 2e: Provide a very short (max 72 characters) summary of how this race reacted, in a humorous, bureaucratic, Terry Pratchett–inspired style.
-	6.	Step 2f: Provide two short comments (each max 72 characters) from members of that race, referencing the Tweet in a witty, satirical manner. Each comment should:
-	•	Include a hashtag.
-	•	Clearly respond to or cite the player’s Tweet (not the original Event).
-	•	Reflect the final loyalty sentiment.
+2a. Assume the role of the race according to race_description_full. Judge on -5 to 5 scale how this event/tweet would affect the loyaly to the Emperor (where -5 = hated, 0 = indifferent, 5 = loved) 
+2b. Make sure to emphasize effect of player action in your judgement. If the player spinned the Tweet - check how exactly they changed it, and exaggerate effects of that changes to loyalty of each group. If the player instead created a distraction - make sure to assess how successful it was, how it affected the loyalty - but also how loyalty was negatively affected by the attempt of distraction itself. In general, make sure to be lenient - try to guess what spin the player aiming for when he was spinning the tweet, and exaggerate that effect. However remember that effect may differ for various races. Make sure that at least one races reaction is increased because of the spin, and at least one - decreased. For example, spinning war as peacemaking would increase Elves reaction because of their peaceful stance but decrease Orcs reaction because of their agression and military amnitions. 
+2c. Check race profile in race_description_ingame. Make sure that the reaction value and rationale behind it is consistent with that profile, adjust if necessary. 
+2d. Present the final numeric loyalty value.
+2e. Provide the short (72 chars tops) summary of how the race reacted - rephrase the rationale from step 2b. Style of the summary should be an obvious but witty parody on bueracracy, in Terry Pratchett humorous style.
+2f. Provide two short (72 chars tops) comments from members of the race. Comments should align with the value and rational from 2d and. Comments style should be humorous, witty and exaggerated, in Terry Pratchett style. Each comment should include a hashtag, twitter-style. Each comment should cite the players Tweet or respond to it obviously, in a way that makes it clear for the player that comment is directly related to his tweet, not to the original event.
 
 JSON fields for each race:
 
