@@ -1,6 +1,6 @@
 @page "/OpenAIDebug"
 @inject OpenAiClient OpenAiClient;
-
+@attribute [Authorize(Policy = "BasicAuthPolicy")] 
 
 <h1>OpenAIDebug</h1>
 <h5>system</h5>

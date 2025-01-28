@@ -1,14 +1,28 @@
 using BlazorApplicationInsights;
 using GlobalGameJam2025_Bubbles.Components;
+using GlobalGameJam2025_Bubbles.Infrastructure;
 using GlobalGameJam2025_Bubbles.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.ApplicationInsights.Common.Extensions;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry(config =>
     config.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
 builder.Services.AddBlazorApplicationInsights(config => config.ConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
+
+builder.Services
+    .AddAuthentication("BasicAuth")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BasicAuthPolicy", policy =>
+    {
+        policy.AddAuthenticationSchemes("BasicAuth");
+        policy.RequireAuthenticatedUser();
+    });
+});
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -28,11 +42,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
