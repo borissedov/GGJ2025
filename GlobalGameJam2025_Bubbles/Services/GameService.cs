@@ -70,7 +70,7 @@ public class GameService
     private string GenerateAvatarUrl(string seed)
     {
         // Example using DiceBear Avatars API with the "adventurer" style
-        return $"img/circle-{seed.ToLower()}.png";
+        return $"img/circle-{seed.ToLower()}.webp";
     }
 
     public async Task NextStep(GameViewModel game)
@@ -337,7 +337,7 @@ public class GameService
         };
 
 
-        return $"img/emperor-{happinesses[index].ToString().ToLower()}.png";
+        return $"img/emperor-{happinesses[index].ToString().ToLower()}.webp";
     }
 }
 

@@ -14,7 +14,7 @@
 }
 
 #game-container {
-    background-image: url('img/backround-main.PNG');
+    background-image: url('img/backround-main.webp');
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
@@ -31,7 +31,7 @@
 }
 
 #palantir-bubble {
-    background-image: url('img/bubble-palantir.PNG');
+    background-image: url('img/bubble-palantir.webp');
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
@@ -121,7 +121,7 @@
 }
 
 #btn-post-tweet{
-    background: url("img/button-seal.PNG");
+    background: url("img/button-seal.webp");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
