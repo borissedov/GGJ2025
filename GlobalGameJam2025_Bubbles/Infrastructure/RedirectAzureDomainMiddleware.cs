@@ -35,6 +35,7 @@ public class RedirectAzureDomainMiddleware
 
             // Perform a permanent redirect (301)
             context.Response.Redirect(uriBuilder.Uri.ToString(), true);
+            Console.WriteLine($"Redirecting to custom domain: {_customDomain}");
             return;
         }
 
