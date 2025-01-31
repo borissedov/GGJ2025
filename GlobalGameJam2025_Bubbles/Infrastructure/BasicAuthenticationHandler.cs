@@ -9,13 +9,17 @@ namespace GlobalGameJam2025_Bubbles.Infrastructure;
 
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    private readonly IConfiguration _configuration;
+
     public BasicAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock)
+        ISystemClock clock,
+        IConfiguration configuration)
         : base(options, logger, encoder, clock)
     {
+        _configuration = configuration;
     }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -42,7 +46,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             var password = credentials.Length > 1 ? credentials[1] : string.Empty;
 
             // 4. Validate the user credentials (simple hard-coded check here)
-            if (username == Environment.GetEnvironmentVariable("BASIC_AUTH_USERNAME") && password == Environment.GetEnvironmentVariable("BASIC_AUTH_PASSWORD"))
+            if (username == _configuration["BASIC_AUTH_USERNAME"] && password == _configuration["BASIC_AUTH_PASSWORD"])
             {
                 // 5. Create an authenticated identity
                 var claims = new[] { new Claim(ClaimTypes.Name, username) };

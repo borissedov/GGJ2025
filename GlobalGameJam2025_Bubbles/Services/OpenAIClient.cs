@@ -21,7 +21,7 @@ namespace GlobalGameJam2025_Bubbles.Services
             _telemetryClient = telemetryClient;
             _endpoint = configuration.GetValue<string>("OpenAIEndpoint")!;
             _deploymentName = configuration.GetValue<string>("OpenAIDeploymentName")!;
-            _apiKey = Environment.GetEnvironmentVariable("OpenAIApiKey")!;
+            _apiKey = configuration.GetValue<string>("OpenAIApiKey")!;
 //             _systemMessage = $@"
 // {File.ReadAllText(Path.Combine("wwwroot", "Prompts", "system_prompt.txt"))}
 //
