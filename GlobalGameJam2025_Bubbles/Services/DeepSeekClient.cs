@@ -68,7 +68,7 @@ Tweet {day}: {tweetText}
         // Deserialize the DeepSeek response
         var deepSeekResponse = JsonSerializer.Deserialize<DeepSeekResponse>(responseContent);
         // Assuming the assistant response is in the first choice's message content.
-        string responseText = deepSeekResponse?.choices?.FirstOrDefault()?.message?.content ?? "";
+        string responseText = deepSeekResponse?.Choices?.FirstOrDefault()?.Message?.Content ?? "";
 
         // Log telemetry (using a similar pattern as in OpenAiClient)
         _telemetryClient.TrackEvent("DeepSeekCall",
@@ -113,7 +113,7 @@ Tweet {day}: {tweetText}
 
         string responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         var deepSeekResponse = JsonSerializer.Deserialize<DeepSeekResponse>(responseContent);
-        string responseText = deepSeekResponse?.choices?.FirstOrDefault()?.message?.content ?? "";
+        string responseText = deepSeekResponse?.Choices?.FirstOrDefault()?.Message?.Content ?? "";
 
         return responseText;
     }
