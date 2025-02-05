@@ -8,7 +8,7 @@ using OpenAI.Chat;
 
 namespace GlobalGameJam2025_Bubbles.Services
 {
-    public class OpenAiClient
+    public class OpenAiClient : ILlmClient
     {
         private readonly string _endpoint;
         private readonly string _deploymentName;
@@ -43,15 +43,15 @@ namespace GlobalGameJam2025_Bubbles.Services
             ChatClient chatClient = azureClient.GetChatClient(_deploymentName);
 
             var requestId = Guid.NewGuid();
-            
+
             var userMessage = $@"
 Event {day}: {newsText}
 Tweet {day}: {tweetText}
 ";
             Console.Write("Prompt:");
             Console.WriteLine(userMessage);
-            
-            
+
+
             var stopwatch = Stopwatch.StartNew();
 
             ChatCompletion completion = chatClient.CompleteChat(
@@ -61,25 +61,25 @@ Tweet {day}: {tweetText}
             ]);
 
             stopwatch.Stop();
-            
+
             string responseText = completion.Content[0].Text;
 
             Console.WriteLine("OpenAI Response:");
             Console.WriteLine(responseText);
-            
-            _telemetryClient.TrackEvent("OpenAICall", 
+
+            _telemetryClient.TrackEvent("OpenAICall",
                 new Dictionary<string, string>
                 {
-                    {"CallId", requestId.ToString()},
-                    {"Prompt", userMessage},
-                    {"Response", responseText}
+                    { "CallId", requestId.ToString() },
+                    { "Prompt", userMessage },
+                    { "Response", responseText }
                 },
                 new Dictionary<string, double>
                 {
-                    {"DurationMs", stopwatch.ElapsedMilliseconds}
+                    { "DurationMs", stopwatch.ElapsedMilliseconds }
                 }
             );
-            
+
             return JsonSerializer.Deserialize<TweetProcessingResponse>(responseText);
         }
 
@@ -98,7 +98,6 @@ Tweet {day}: {tweetText}
             ]);
 
             return completion.Content[0].Text;
-
         }
     }
 }

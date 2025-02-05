@@ -1,5 +1,5 @@
 @page "/OpenAIDebug"
-@inject OpenAiClient OpenAiClient;
+@inject ILlmClient LlmClient;
 @attribute [Authorize(Policy = "BasicAuthPolicy")] 
 
 <h1>OpenAIDebug</h1>
@@ -18,7 +18,7 @@
 
     private void Process()
     {
-        output = OpenAiClient.Debug(systemPrompt, userPrompt);
+        output = LlmClient.Debug(systemPrompt, userPrompt);
         StateHasChanged();
     }
 }

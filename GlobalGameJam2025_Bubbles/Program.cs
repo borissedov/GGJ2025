@@ -31,8 +31,18 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<NewsService>();
-builder.Services.AddSingleton<OpenAiClient>();
 
+switch (builder.Configuration["LlmType"])
+{
+    case "DeepSeek":
+        builder.Services.AddHttpClient<ILlmClient, DeepSeekClient>();
+        break;
+    case "OpenAi":
+        builder.Services.AddSingleton<ILlmClient, OpenAiClient>();
+        break;
+    default:
+        throw new InvalidOperationException("Invalid LLM type");
+}
 
 var app = builder.Build();
 

@@ -7,13 +7,13 @@ public class GameService
 {
     private readonly int _maxGameDays;
     private readonly NewsService _newsService;
-    private readonly OpenAiClient _openAiClient;
+    private readonly ILlmClient _llmClient;
     private readonly TelemetryClient _telemetryClient;
 
-    public GameService(IConfiguration configuration, NewsService newsService, OpenAiClient openAiClient, TelemetryClient telemetryClient)
+    public GameService(IConfiguration configuration, NewsService newsService, ILlmClient llmClient, TelemetryClient telemetryClient)
     {
         _newsService = newsService;
-        _openAiClient = openAiClient;
+        _llmClient = llmClient;
         _telemetryClient = telemetryClient;
         _maxGameDays = configuration.GetValue<int>("MaxGameDays");
     }
@@ -105,7 +105,7 @@ public class GameService
 
         if (game.GameState == GameState.CommentsShow)
         {
-            var aiResponse = _openAiClient.ProcessTweet(game.DaysCounter, game.NewsRecord.BodyText, game.Tweet);
+            var aiResponse = _llmClient.ProcessTweet(game.DaysCounter, game.NewsRecord.BodyText, game.Tweet);
             
             if (aiResponse.Step2.Elves != null && aiResponse.Step2.Elves.Comments.Any())
                 foreach (var elvesComment in aiResponse.Step2.Elves.Comments)
